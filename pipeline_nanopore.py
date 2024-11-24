@@ -142,6 +142,28 @@ def mv_file(path_in, path_out):
     os.system(l)
     return 0
 
+def run_dorado_once(input_path, output_path, kit_name, model_name):
+    # Start the script
+    l = 'dorado basecaller'
+    # Define gpu to use
+    l += ' -x cuda:all'
+    # Make it recursive
+    l += ' -r'
+    # Define type of output
+    l += ' --emit-fastq'
+    # Define kit name
+    l += f' --kit-name {kit_name}'
+    # Define model name
+    l += f' {model_name}'
+    # Define input folder
+    l += f' {input_path}'
+    # Define output folder
+    l += f' > {output_path}'
+    # Print and run script
+    print(l)
+    os.system(l)
+    return 0
+
 def run_minimap2_samtools(path_fastq, path_sam, path_bam, path_ref, t):
     # Start the script
     l = 'minimap2'
@@ -219,8 +241,6 @@ def variant_call_nanocall_raw(n_t,
                               in_docker='/opt/input/'
                               ):
     # Define variants in os.environ[]
-    # Number of threads
-    os.environ['nanocall_t'] = str(n_t)
     # Directory for bam inside docker
     os.environ['nanocall_bam'] = in_docker+bam_in
     # Directory for fasta inside docker
@@ -244,13 +264,111 @@ def variant_call_nanocall_raw(n_t,
     # Define presets and sequencing type
     l += ' --preset ont --sequencing short_ont'
     # Define threads
-    l += ' --cpu $nanocall_t'
+    l += f' --cpu {n_t}'
     # Define bam folder
     l += ' --bam $nanocall_bam'
     # Define fasta folder
     l += ' --ref $nanocall_fasta'
     # Define output folder
     l += ' --output $nanocall_out_docker'
+    # Add password call
+    l += ' < ./pw.txt'
+    # Print and run script
+    print(l)
+    os.system(l)
+    # Start the chmod script
+    l = 'sudo -S chmod'
+    # Define permissions for new files
+    l += ' -R 777'
+    # Define the folder to change permissions
+    l += f' {output_dir}'
+    # Add password call
+    l += ' < ./pw.txt'
+    # Print and run script
+    print(l)
+    os.system(l)
+    return 0
+
+def variant_call_clair3_list(l_bc,
+                             path_minimap2,
+                             path_clair3,
+                             refname,
+                             model_name,
+                             model_path,
+                             ref_ext='.fasta'
+                             ):
+    # Define reference
+    fasta_in = f'{refname}{ref_ext}'
+    # Go through barcodes
+    for bc in l_bc:
+        # Define folders
+        bam_in = f'{refname}_{bc}_sorted.bam'
+        output_dir = f'{path_clair3}/{bc}'
+        # Make output_dir
+        mkdir_p(output_dir)
+        # Run nanocall on each barcode
+        variant_call_clair3_raw(THREADS,
+                                path_minimap2,
+                                output_dir,
+                                bam_in,
+                                fasta_in,
+                                model_name=model_name,
+                                model_path=model_path
+                                )
+    return 0
+
+def variant_call_clair3_raw(n_t,
+                            input_dir,
+                            output_dir,
+                            bam_in,
+                            fasta_in, 
+                            out_docker='/opt/output/',
+                            in_docker='/opt/input/', 
+                            model_name='r941_prom_hac_g238',
+                            model_path='/opt/models/'
+                            ):
+    # Define variants in os.environ[]
+    # Directory for bam inside docker
+    os.environ['clair3_bam'] = in_docker+bam_in
+    # Directory for fasta inside docker
+    os.environ['clair3_fasta'] = in_docker+fasta_in
+    # Folder to be assigned to in_docker inside docker
+    os.environ['clair3_input'] = input_dir
+    # Folder to be assigned to out_docker inside docker
+    os.environ['clair3_output'] = output_dir
+    # Directory of input inside docker
+    os.environ['clair3_in_docker'] = in_docker
+    # Directory of output inside docker
+    os.environ['clair3_out_docker'] = out_docker
+    # Directory for the used model inside docker
+    os.environ['model_full_path'] = model_path+model_name
+    os.environ['model_dir_path'] = model_path
+    # Start the docker script
+    l = 'sudo -S docker run'
+    # Add input folders
+    l += ' -v $clair3_input:$clair3_in_docker'
+    # Add output folders
+    l += ' -v $clair3_output:$clair3_out_docker'
+    # Define function
+    l += ' hkubal/clair3:latest /opt/bin/run_clair3.sh'
+    # Include all contigs
+    l += ' --include_all_ctgs'
+    # Define bam
+    l += ' --bam_fn=$clair3_bam'
+    # Define fasta
+    l += ' --ref_fn=$clair3_fasta'
+    # Define output
+    l += ' --output=$clair3_out_docker'
+    # Define number of threads
+    l += f' --threads={n_t}'
+    # Define analyses to be done
+    l += ' --enable_phasing --enable_long_indel'
+    l += ' --use_whatshap_for_final_output_phasing'
+    l += ' --use_whatshap_for_final_output_haplotagging'
+    # Define the type of input
+    l += ' --platform="ont"'
+    # Define the path to the model
+    l += ' --model_path=$model_full_path'
     # Add password call
     l += ' < ./pw.txt'
     # Print and run script
