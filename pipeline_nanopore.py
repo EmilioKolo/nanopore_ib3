@@ -25,11 +25,23 @@ def _main():
     # Define clair3 model
     model_name = 'r941_prom_hac_g303'
     # Run the entire pipeline
-    pipeline_main(l_bc, run_folder, refname, model_name, ref_ext='.fasta')
+    pipeline_main(
+        l_bc,
+        run_folder,
+        refname,
+        model_name,
+        ref_ext='.fasta'
+        )
     return 0
 
 
-def pipeline_main(l_bc, run_folder, refname, model_name, ref_ext='.fasta'):
+def pipeline_main(
+        l_bc,
+        run_folder,
+        refname,
+        model_name,
+        ref_ext='.fasta'
+        ):
     # Define folders
     path_in = f'{INPUT_DIR}/{run_folder}'
     path_fastq = f'{OUTPUT_DIR}/{run_folder}'
@@ -53,30 +65,33 @@ def pipeline_main(l_bc, run_folder, refname, model_name, ref_ext='.fasta'):
     mv_ref_file = f'{path_minimap2}/{refname}{ref_ext}'
     mv_file(ref_file, mv_ref_file)
     # Run NanoCall on the list of barcodes
-    variant_call_nanocall_list(l_bc,
-                               path_minimap2,
-                               path_nanocall,
-                               refname,
-                               ref_ext=ref_ext
-                               )
+    variant_call_nanocall_list(
+        l_bc,
+        path_minimap2,
+        path_nanocall,
+        refname,
+        ref_ext=ref_ext
+        )
     # Run Clair3 on the list of barcodes
-    variant_call_clair3_list(l_bc,
-                             path_minimap2,
-                             path_clair3,
-                             refname,
-                             model_name=model_name,
-                             model_path=MODEL_PATH,
-                             ref_ext='.fasta'
-                             )
+    variant_call_clair3_list(
+        l_bc,
+        path_minimap2,
+        path_clair3,
+        refname,
+        model_name=model_name,
+        model_path=MODEL_PATH,
+        ref_ext='.fasta'
+        )
     # Run Whatshap on the variant caller output
-    whatshap_list(l_bc,
-                  path_nanocall,
-                  path_minimap2,
-                  path_whatshap_nc,
-                  refname,
-                  vcf_name='variant_calls.vcf.gz',
-                  ref_ext='.fasta'
-                  )
+    whatshap_list(
+        l_bc,
+        path_nanocall,
+        path_minimap2,
+        path_whatshap_nc,
+        refname,
+        vcf_name='variant_calls.vcf.gz',
+        ref_ext='.fasta'
+        )
     return 0
 
 
@@ -112,14 +127,15 @@ def join_fastq(bc_path, path_concat):
     os.system(l)
     return 0
 
-def minimap2_alignment(l_bc,
-                       path_fq_in,
-                       ref_dir,
-                       path_out,
-                       refname,
-                       ref_ext='.fasta',
-                       threads=12
-                       ):
+def minimap2_alignment(
+        l_bc,
+        path_fq_in,
+        ref_dir,
+        path_out,
+        refname,
+        ref_ext='.fasta',
+        threads=12
+        ):
     # Make directories if they do not exist
     mkdir_p(path_out)
     # Go through barcodes
@@ -131,12 +147,13 @@ def minimap2_alignment(l_bc,
         path_sam = f'{path_out}/{refname}_{curr_bc}.sam'
         path_bam = f'{path_out}/{refname}_{curr_bc}_sorted.bam'
         # Run minimap2 and samtools
-        run_minimap2_samtools(path_fastq,
-                              path_sam,
-                              path_bam,
-                              path_ref,
-                              threads
-                              )
+        run_minimap2_samtools(
+            path_fastq,
+            path_sam,
+            path_bam,
+            path_ref,
+            threads
+            )
     return 0
 
 def run_dorado_once(input_path, output_path, kit_name, model_name):
@@ -205,12 +222,13 @@ def run_samtools_sort_index(path_sam, path_bam_sorted):
     run_samtools_index(path_bam_sorted)
     return 0
 
-def variant_call_nanocall_list(l_bc,
-                               path_minimap2,
-                               path_nanocall,
-                               refname,
-                               ref_ext='.fasta'
-                               ):
+def variant_call_nanocall_list(
+        l_bc,
+        path_minimap2,
+        path_nanocall,
+        refname,
+        ref_ext='.fasta'
+        ):
     # Define reference
     fasta_in = f'{refname}{ref_ext}'
     # Go through barcodes
@@ -221,22 +239,24 @@ def variant_call_nanocall_list(l_bc,
         # Make output_dir
         mkdir_p(output_dir)
         # Run nanocall on each barcode
-        variant_call_nanocall_raw(THREADS,
-                                  path_minimap2,
-                                  output_dir,
-                                  bam_in,
-                                  fasta_in
-                                  )
+        variant_call_nanocall_raw(
+            THREADS,
+            path_minimap2,
+            output_dir,
+            bam_in,
+            fasta_in
+            )
     return 0
 
-def variant_call_nanocall_raw(n_t,
-                              input_dir,
-                              output_dir,
-                              bam_in,
-                              fasta_in,
-                              out_docker='/opt/output/',
-                              in_docker='/opt/input/'
-                              ):
+def variant_call_nanocall_raw(
+        n_t,
+        input_dir,
+        output_dir,
+        bam_in,
+        fasta_in,
+        out_docker='/opt/output/',
+        in_docker='/opt/input/'
+        ):
     # Define variants in os.environ[]
     # Directory for bam inside docker
     os.environ['nanocall_bam'] = in_docker+bam_in
@@ -286,14 +306,15 @@ def variant_call_nanocall_raw(n_t,
     os.system(l)
     return 0
 
-def variant_call_clair3_list(l_bc,
-                             path_minimap2,
-                             path_clair3,
-                             refname,
-                             model_name,
-                             model_path,
-                             ref_ext='.fasta'
-                             ):
+def variant_call_clair3_list(
+        l_bc,
+        path_minimap2,
+        path_clair3,
+        refname,
+        model_name,
+        model_path,
+        ref_ext='.fasta'
+        ):
     # Define reference
     fasta_in = f'{refname}{ref_ext}'
     # Go through barcodes
@@ -304,26 +325,28 @@ def variant_call_clair3_list(l_bc,
         # Make output_dir
         mkdir_p(output_dir)
         # Run nanocall on each barcode
-        variant_call_clair3_raw(THREADS,
-                                path_minimap2,
-                                output_dir,
-                                bam_in,
-                                fasta_in,
-                                model_name=model_name,
-                                model_path=model_path
-                                )
+        variant_call_clair3_raw(
+            THREADS,
+            path_minimap2,
+            output_dir,
+            bam_in,
+            fasta_in,
+            model_name=model_name,
+            model_path=model_path
+            )
     return 0
 
-def variant_call_clair3_raw(n_t,
-                            input_dir,
-                            output_dir,
-                            bam_in,
-                            fasta_in, 
-                            out_docker='/opt/output/',
-                            in_docker='/opt/input/', 
-                            model_name='r941_prom_hac_g238',
-                            model_path='/opt/models/'
-                            ):
+def variant_call_clair3_raw(
+        n_t,
+        input_dir,
+        output_dir,
+        bam_in,
+        fasta_in,
+        out_docker='/opt/output/',
+        in_docker='/opt/input/',
+        model_name='r941_prom_hac_g238',
+        model_path='/opt/models/'
+        ):
     # Define variants in os.environ[]
     # Directory for bam inside docker
     os.environ['clair3_bam'] = in_docker+bam_in
@@ -384,13 +407,14 @@ def variant_call_clair3_raw(n_t,
     os.system(l)
     return 0
 
-def whatshap_haplotag(phased_vcf,
-                      unphased_bam,
-                      output_bam,
-                      nom_list,
-                      nom_ref,
-                      ploidy=2
-                      ):
+def whatshap_haplotag(
+        phased_vcf,
+        unphased_bam,
+        output_bam,
+        nom_list,
+        nom_ref,
+        ploidy=2
+        ):
     # Start the whatshap script
     l = 'whatshap haplotag'
     # Define output
@@ -439,14 +463,15 @@ def whatshap_haplo_split(reads_in, reads_out, list_haplo, ext='.bam'):
     run_samtools_index(reads_out_untag)
     return 0
 
-def whatshap_list(l_bc,
-                  path_vcf,
-                  path_bam,
-                  path_out,
-                  refname,
-                  vcf_name='variant_calls.vcf.gz',
-                  ref_ext='.fasta'
-                  ):
+def whatshap_list(
+        l_bc,
+        path_vcf,
+        path_bam,
+        path_out,
+        refname,
+        vcf_name='variant_calls.vcf.gz',
+        ref_ext='.fasta'
+        ):
     # Go through l_bc
     for i in range(len(l_bc)):
         bc = l_bc[i]
@@ -463,8 +488,19 @@ def whatshap_list(l_bc,
         reads_in = f'{path_bam}/{refname}_{bc}_sorted'
         reads_out = f'{bc_folder}/{refname}_{bc}'
         # Run whatshap scripts
-        whatshap_haplotag(phased_vcf, unphased_bam, output_bam, nom_list_ht, nom_ref); 
-        whatshap_haplo_split(reads_in, reads_out, nom_list_ht, ext='.bam'); 
+        whatshap_haplotag(
+            phased_vcf,
+            unphased_bam,
+            output_bam,
+            nom_list_ht,
+            nom_ref
+            )
+        whatshap_haplo_split(
+            reads_in,
+            reads_out,
+            nom_list_ht,
+            ext='.bam'
+            )
     return 0
 
 
