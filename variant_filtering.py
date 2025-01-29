@@ -1,7 +1,7 @@
 
 import os
 import copy
-from file_manager import rmfolder
+from file_manager import mkdir_p
 
 # Important directories
 INPUT_DIR = '/home/promethion/minknow_outputs'
