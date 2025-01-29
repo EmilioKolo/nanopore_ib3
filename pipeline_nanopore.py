@@ -5,6 +5,7 @@ import os
 INPUT_DIR = '/home/promethion/minknow_outputs'
 OUTPUT_DIR = '/home/promethion/Documents/nanopore_pipeline'
 REF_DIR = '/home/promethion/Documents/ref_seq'
+MODEL_PATH = '/'
 THREADS = 12
 
 
@@ -20,18 +21,21 @@ def _main():
     # Define folders
     run_folder = 'run3'
     refname = 'hg38'
+    # Define clair3 model
+    model_name = 'r941_prom_hac_g303'
     # Run the entire pipeline
-    pipeline_main(l_bc, run_folder, refname, ref_ext='.fasta')
+    pipeline_main(l_bc, run_folder, refname, model_name, ref_ext='.fasta')
     return 0
 
 
-def pipeline_main(l_bc, run_folder, refname, ref_ext='.fasta'):
+def pipeline_main(l_bc, run_folder, refname, model_name, ref_ext='.fasta'):
     # Define folders
     path_in = f'{INPUT_DIR}/{run_folder}'
     path_fastq = f'{OUTPUT_DIR}/{run_folder}'
     ref_dir = f'{REF_DIR}'
     path_minimap2 = f'{OUTPUT_DIR}/sam_bam'
     path_nanocall = f'{OUTPUT_DIR}/vcf_nanocall'
+    path_clair3 = f'{OUTPUT_DIR}/vcf_clair3'
     path_whatshap_nc = f'{OUTPUT_DIR}/whatshap_nc'
     # Join fastq files
     join_fastq_l_bc(l_bc, path_fastq, path_in)
@@ -54,6 +58,15 @@ def pipeline_main(l_bc, run_folder, refname, ref_ext='.fasta'):
                                refname,
                                ref_ext=ref_ext
                                )
+    # Run Clair3 on the list of barcodes
+    variant_call_clair3_list(l_bc,
+                             path_minimap2,
+                             path_clair3,
+                             refname,
+                             model_name=model_name,
+                             model_path=MODEL_PATH,
+                             ref_ext='.fasta'
+                             )
     # Run Whatshap on the variant caller output
     whatshap_list(l_bc,
                   path_nanocall,
