@@ -12,13 +12,32 @@ THREADS = 12
 
 def _main():
     # Define the list of barcodes
-    l_bc = ['barcode01', 'barcode02', 'barcode03', 'barcode04',
-            'barcode05', 'barcode06', 'barcode07', 'barcode08',
-            'barcode09', 'barcode10', 'barcode11', 'barcode12',
-            'barcode13', 'barcode14', 'barcode15', 'barcode16',
-            'barcode17', 'barcode18', 'barcode19', 'barcode20',
-            'barcode21', 'barcode22', 'barcode23', 'barcode24'
-            ]
+    l_bc = [
+        'barcode01',
+        'barcode02',
+        'barcode03',
+        'barcode04',
+        'barcode05',
+        'barcode06',
+        'barcode07',
+        'barcode08',
+        'barcode09',
+        'barcode10',
+        'barcode11',
+        'barcode12',
+        'barcode13',
+        'barcode14',
+        'barcode15',
+        'barcode16',
+        'barcode17',
+        'barcode18',
+        'barcode19',
+        'barcode20',
+        'barcode21',
+        'barcode22',
+        'barcode23',
+        'barcode24'
+        ]
     # Define folders
     run_folder = 'run3'
     refname = 'hg38'
