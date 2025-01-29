@@ -1,5 +1,6 @@
 
 import os
+from file_manager import mkdir_p, mv_file
 
 # Important directories
 INPUT_DIR = '/home/promethion/minknow_outputs'
@@ -111,11 +112,6 @@ def join_fastq(bc_path, path_concat):
     os.system(l)
     return 0
 
-def mkdir_p(outdir):
-    l = f'mkdir -p {outdir}'
-    os.system(l)
-    return 0
-
 def minimap2_alignment(l_bc,
                        path_fq_in,
                        ref_dir,
@@ -141,18 +137,6 @@ def minimap2_alignment(l_bc,
                               path_ref,
                               threads
                               )
-    return 0
-
-def mv_file(path_in, path_out):
-    # Start the mv script
-    l = 'mv'
-    # Add input
-    l += f' {path_in}'
-    # Add output
-    l += f' {path_out}'
-    # Print and run script
-    print(l)
-    os.system(l)
     return 0
 
 def run_dorado_once(input_path, output_path, kit_name, model_name):
