@@ -2,11 +2,29 @@
 import os
 
 
-def eliminate_spaces(dirname):
+def eliminate_spaces(dirname, dir_path, is_folder=True):
     # Replace spaces with underscores
     newdirname = dirname.replace(' ', '_')
-    # Use mvdir to rename dirname
-    mv_file(dirname.replace(' ', '\ '), newdirname)
+    # Define temp_dirpath
+    temp_dirpath = f'/tmp/{newdirname}'
+    # Define old and new filepaths
+    old_filepath = f'{dir_path}/{dirname.replace(' ', '\ ')}'
+    new_filepath = f'{dir_path}/{newdirname}'
+    # Change execution is dirname is a folder
+    if is_folder:
+        # Make new and temp directories
+        mkdir_p(temp_dirpath)
+        mkdir_p(new_filepath)
+        # Use mvdir to rename dirname
+        mv_file(old_filepath+'/*', temp_dirpath)
+        mv_file(temp_dirpath+'/*', new_filepath)
+        # Remove old and temp directories
+        rmfolder(old_filepath, safety=False)
+        rmfolder(temp_dirpath, safety=False)
+    else:
+        # Use mvdir to rename dirname
+        mv_file(old_filepath, temp_dirpath)
+        mv_file(temp_dirpath, new_filepath)
     return 0
 
 def mkdir_p(dirname):
