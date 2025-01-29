@@ -42,14 +42,11 @@ def _main():
     # Define folders
     run_folder = 'run3'
     refname = 'hg38'
-    # Define clair3 model
-    model_name = 'r941_prom_hac_g303'
     # Run the entire pipeline
     pipeline_main(
         l_bc,
         run_folder,
         refname,
-        model_name,
         ref_ext='.fasta'
         )
     return 0
@@ -59,7 +56,6 @@ def pipeline_main(
         l_bc,
         run_folder,
         refname,
-        model_name,
         ref_ext='.fasta'
         ):
     # Define folders
@@ -98,7 +94,7 @@ def pipeline_main(
         path_minimap2,
         path_clair3,
         refname,
-        model_name=model_name,
+        model_name=MODEL_NAME,
         model_path=MODEL_PATH,
         ref_ext='.fasta'
         )
