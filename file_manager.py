@@ -1,13 +1,12 @@
 
 import os
 
-PW = '/mnt/d/Descargas/pw.txt'
 
 def eliminate_spaces(dirname):
     # Replace spaces with underscores
     newdirname = dirname.replace(' ', '_')
     # Use mvdir to rename dirname
-    mv_file(dirname.replace(' ', '\ '), newdirname, sudo=True)
+    mv_file(dirname.replace(' ', '\ '), newdirname)
     return 0
 
 def mkdir_p(dirname):
@@ -15,16 +14,13 @@ def mkdir_p(dirname):
     os.system(l)
     return 0
 
-def mv_file(path_in, path_out, sudo=False):
+def mv_file(path_in, path_out):
     # Start the mv script
     l = 'mv'
     # Add input
     l += f' {path_in}'
     # Add output
     l += f' {path_out}'
-    # Add sudo if needed
-    if sudo:
-        l = f'sudo {l} < {PW}'
     # Print and run script
     print(l)
     os.system(l)
