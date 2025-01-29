@@ -6,7 +6,8 @@ from file_manager import mkdir_p, mv_file
 INPUT_DIR = '/home/promethion/minknow_outputs'
 OUTPUT_DIR = '/home/promethion/Documents/nanopore_pipeline'
 REF_DIR = '/home/promethion/Documents/ref_seq'
-MODEL_PATH = '/'
+MODEL_PATH = '/home/promethion/documents/clair3_models'
+MODEL_NAME = 'r941_prom_hac_g303'
 THREADS = 12
 
 
