@@ -1,6 +1,12 @@
 
 import os
 
+def eliminate_spaces(dirname):
+    # Replace spaces with underscores
+    newdirname = dirname.replace(' ', '_')
+    # Use mvdir to rename dirname
+    mv_file(dirname.replace(' ', '\ '), newdirname, sudo=True)
+    return 0
 
 def mkdir_p(dirname):
     l = f'mkdir -p {dirname}'
