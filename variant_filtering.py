@@ -8,12 +8,48 @@ INPUT_DIR = '/home/promethion/minknow_outputs'
 OUTPUT_DIR = '/home/promethion/Documents/nanopore_pipeline'
 REF_DIR = '/home/promethion/Documents/ref_seq'
 THREADS = 12
+TEST_MODE = False
 
 
 def _main():
-    # Define dict of data
-    data_dict = {}
-    # 
+    if TEST_MODE:
+        # Define a subset of data for data_dict
+        data_dict = {'VCFs_corrida1':[
+            'Barcode_1_Gen',
+            'Barcode_1_Pseudogen'
+            ]
+            }
+    else:
+        # Define dict of data
+        data_dict = {}
+        # Define if Gen/Pseudogen folders are separated in data_dict
+        separated = True
+        # Define data_dict based on available folders
+        for j in [1,2]:
+            curr_key = f'VCFs_corrida{j}'
+            data_dict[curr_key] = []
+            for i in range(1,25):
+                if separated:
+                    data_dict[curr_key].append(f'Barcode_{i}_Gen')
+                    data_dict[curr_key].append(f'Barcode_{i}_Pseudogen')
+                else:
+                    l_folders = (
+                        f'Barcode_{i}_Gen',
+                        f'Barcode_{i}_Pseudogen'
+                        )
+                    data_dict[curr_key].append(l_folders)
+        curr_key = 'VCFs_corrida3'
+        data_dict[curr_key] = []
+        for i in range(4,25):
+            if separated:
+                data_dict[curr_key].append(f'Barcode_{i}_Gen')
+                data_dict[curr_key].append(f'Barcode_{i}_Pseudogen')
+            else:
+                l_folders = (
+                    f'Barcode_{i}_Gen',
+                    f'Barcode_{i}_Pseudogen'
+                    )
+                data_dict[curr_key].append(l_folders)
     return 0
 
 
