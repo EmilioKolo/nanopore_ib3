@@ -22,35 +22,7 @@ def _main():
             }
     else:
         # Define dict of data
-        data_dict = {}
-        # Define if Gen/Pseudogen folders are separated in data_dict
-        separated = True
-        # Define data_dict based on available folders
-        for j in [1,2]:
-            curr_key = f'VCFs_corrida{j}'
-            data_dict[curr_key] = []
-            for i in range(1,25):
-                if separated:
-                    data_dict[curr_key].append(f'Barcode_{i}_Gen')
-                    data_dict[curr_key].append(f'Barcode_{i}_Pseudogen')
-                else:
-                    l_folders = (
-                        f'Barcode_{i}_Gen',
-                        f'Barcode_{i}_Pseudogen'
-                        )
-                    data_dict[curr_key].append(l_folders)
-        curr_key = 'VCFs_corrida3'
-        data_dict[curr_key] = []
-        for i in range(4,25):
-            if separated:
-                data_dict[curr_key].append(f'Barcode_{i}_Gen')
-                data_dict[curr_key].append(f'Barcode_{i}_Pseudogen')
-            else:
-                l_folders = (
-                    f'Barcode_{i}_Gen',
-                    f'Barcode_{i}_Pseudogen'
-                    )
-                data_dict[curr_key].append(l_folders)
+        data_dict = _generate_data_dict(separated=True)
     return 0
 
 
@@ -89,6 +61,38 @@ def open_vcf(vcf_name, vcf_path='.', ext='.vcf', sep='\t'):
                 # Load dict_line to m_out
                 m_out.append(copy.deepcopy(dict_line))
     return m_out
+
+
+def _generate_data_dict(separated=True):
+    # Define dict of data
+    data_dict = {}
+    # Define data_dict based on available folders
+    for j in [1,2]:
+        curr_key = f'VCFs_corrida{j}'
+        data_dict[curr_key] = []
+        for i in range(1,25):
+            if separated:
+                data_dict[curr_key].append(f'Barcode_{i}_Gen')
+                data_dict[curr_key].append(f'Barcode_{i}_Pseudogen')
+            else:
+                l_folders = (
+                    f'Barcode_{i}_Gen',
+                    f'Barcode_{i}_Pseudogen'
+                    )
+                data_dict[curr_key].append(l_folders)
+    curr_key = 'VCFs_corrida3'
+    data_dict[curr_key] = []
+    for i in range(4,25):
+        if separated:
+            data_dict[curr_key].append(f'Barcode_{i}_Gen')
+            data_dict[curr_key].append(f'Barcode_{i}_Pseudogen')
+        else:
+            l_folders = (
+                f'Barcode_{i}_Gen',
+                f'Barcode_{i}_Pseudogen'
+                )
+            data_dict[curr_key].append(l_folders)
+    return data_dict
 
 
 if __name__=='__main__':
