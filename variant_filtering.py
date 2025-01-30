@@ -14,10 +14,11 @@ TEST_MODE = False
 def _main():
     if TEST_MODE:
         # Define a subset of data for data_dict
-        data_dict = {'VCFs_corrida1':[
-            'Barcode_1_Gen',
-            'Barcode_1_Pseudogen'
-            ]
+        data_dict = {
+            'VCFs_corrida1':[
+                'Barcode_1_Gen',
+                'Barcode_1_Pseudogen'
+                ]
             }
     else:
         # Define dict of data
