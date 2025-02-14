@@ -63,7 +63,6 @@ def pipeline_main(
     path_fastq = f'{OUTPUT_DIR}/{run_folder}'
     ref_dir = f'{REF_DIR}'
     path_minimap2 = f'{OUTPUT_DIR}/sam_bam'
-    path_nanocall = f'{OUTPUT_DIR}/vcf_nanocall'
     path_clair3 = f'{OUTPUT_DIR}/vcf_clair3'
     path_whatshap_nc = f'{OUTPUT_DIR}/whatshap_nc'
     # Join fastq files
@@ -80,14 +79,6 @@ def pipeline_main(
     ref_file = f'{ref_dir}/{refname}{ref_ext}'
     mv_ref_file = f'{path_minimap2}/{refname}{ref_ext}'
     mv_file(ref_file, mv_ref_file)
-    # Run NanoCall on the list of barcodes
-    variant_call_nanocall_list(
-        l_bc,
-        path_minimap2,
-        path_nanocall,
-        refname,
-        ref_ext=ref_ext
-        )
     # Run Clair3 on the list of barcodes
     variant_call_clair3_list(
         l_bc,
@@ -101,7 +92,7 @@ def pipeline_main(
     # Run Whatshap on the variant caller output
     whatshap_list(
         l_bc,
-        path_nanocall,
+        path_clair3,
         path_minimap2,
         path_whatshap_nc,
         refname,
@@ -236,90 +227,6 @@ def run_samtools_sort_index(path_sam, path_bam_sorted):
     os.system(l)
     # Run samtools index
     run_samtools_index(path_bam_sorted)
-    return 0
-
-def variant_call_nanocall_list(
-        l_bc,
-        path_minimap2,
-        path_nanocall,
-        refname,
-        ref_ext='.fasta'
-        ):
-    # Define reference
-    fasta_in = f'{refname}{ref_ext}'
-    # Go through barcodes
-    for bc in l_bc:
-        # Define folders
-        bam_in = f'{refname}_{bc}_sorted.bam'
-        output_dir = f'{path_nanocall}/{bc}'
-        # Make output_dir
-        mkdir_p(output_dir)
-        # Run nanocall on each barcode
-        variant_call_nanocall_raw(
-            THREADS,
-            path_minimap2,
-            output_dir,
-            bam_in,
-            fasta_in
-            )
-    return 0
-
-def variant_call_nanocall_raw(
-        n_t,
-        input_dir,
-        output_dir,
-        bam_in,
-        fasta_in,
-        out_docker='/opt/output/',
-        in_docker='/opt/input/'
-        ):
-    # Define variants in os.environ[]
-    # Directory for bam inside docker
-    os.environ['nanocall_bam'] = in_docker+bam_in
-    # Directory for fasta inside docker
-    os.environ['nanocall_fasta'] = in_docker+fasta_in
-    # Folder to be assigned to in_docker inside docker
-    os.environ['nanocall_input'] = input_dir
-    # Folder to be assigned to out_docker inside docker
-    os.environ['nanocall_output'] = output_dir
-    # Directory of input inside docker
-    os.environ['nanocall_in_docker'] = in_docker
-    # Directory of output inside docker
-    os.environ['nanocall_out_docker'] = out_docker
-    # Start the docker script
-    l = 'sudo -S docker run'
-    # Add input folders
-    l += ' -v $nanocall_input:$nanocall_in_docker'
-    # Add output folders
-    l += ' -v $nanocall_output:$nanocall_out_docker'
-    # Define function
-    l += ' genomicslab/nanocaller:3.4.1 NanoCaller'
-    # Define presets and sequencing type
-    l += ' --preset ont --sequencing short_ont'
-    # Define threads
-    l += f' --cpu {n_t}'
-    # Define bam folder
-    l += ' --bam $nanocall_bam'
-    # Define fasta folder
-    l += ' --ref $nanocall_fasta'
-    # Define output folder
-    l += ' --output $nanocall_out_docker'
-    # Add password call
-    l += ' < ./pw.txt'
-    # Print and run script
-    print(l)
-    os.system(l)
-    # Start the chmod script
-    l = 'sudo -S chmod'
-    # Define permissions for new files
-    l += ' -R 777'
-    # Define the folder to change permissions
-    l += f' {output_dir}'
-    # Add password call
-    l += ' < ./pw.txt'
-    # Print and run script
-    print(l)
-    os.system(l)
     return 0
 
 def variant_call_clair3_list(
