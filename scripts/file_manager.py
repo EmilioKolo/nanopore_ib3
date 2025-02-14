@@ -81,6 +81,49 @@ def mv_file(path_in, path_out):
     os.system(l)
     return 0
 
+def open_txt(
+        filename,
+        path='',
+        ext='.txt',
+        sep='',
+        header=True,
+        skip=''
+        ):
+    """
+    Function to open a txt or csv file and return a list/matrix.
+
+    If sep=='', it does not split lines into lists.
+
+    If a line starts with str(skip), it is skipped. 
+    If skip=='', skip is ignored.
+    """
+    # Define file path
+    filepath = f'{path}/{filename}{ext}'
+    # Initialise output
+    l_out = []
+    # Open file
+    with open(filepath, 'r') as f:
+        # Start header line
+        head = header
+        # Go through lines
+        for line in f.readlines():
+            # Skip line if it starts with skip
+            if skip!='' and line.startswith(skip):
+                pass
+            else:
+                # If sep is specified, separate line
+                if sep!='':
+                    cl = line.rstrip('\n').split(sep)
+                # If sep is not specified, keep line as str
+                else:
+                    cl = line.rstrip('\n')
+                # Add cl to l_out if it is not the first line
+                if head:
+                    head = False
+                else:
+                    l_out.append(cl)
+    return l_out
+
 def rmfolder(fpath, safety=True):
     l = f'rm -r {fpath}'
     if safety:
