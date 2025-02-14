@@ -18,6 +18,9 @@ def _main():
     # Open the file with open_txt
     l_files = open_txt()
     return 0
+
+
+def pipeline_basecall_barcode(l_files, input_path, output_path='.'):
     return 0
 
 
