@@ -10,3 +10,7 @@ adap_dir = ~/downloads/trimmomatic/adapters
 clair3_model_path = ~/downloads/clair3_models
 # Number of threads to be used by your pc
 thread_n = 10
+# Guppy configuration file
+guppy_conf = dna_r10.4.1_e8.2_400bps_5khz_sup.cfg
+# Barcode kit for barcoding
+barcode_kit = SQK-NBD114-24
