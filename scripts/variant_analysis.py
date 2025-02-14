@@ -1,7 +1,7 @@
 
 import os
 import copy
-from file_manager import mkdir_p
+from scripts.file_manager import mkdir_p
 
 # Important directories
 INPUT_DIR = '/home/promethion/minknow_outputs'
@@ -10,6 +10,7 @@ REF_DIR = '/home/promethion/Documents/ref_seq'
 THREADS = 12
 TEST_MODE = False
 
+BASE_DIR = '/mnt/d/Descargas/cosas_minion'
 
 def _main():
     if TEST_MODE:
@@ -23,6 +24,13 @@ def _main():
     else:
         # Define dict of data
         data_dict = _generate_data_dict(separated=True)
+    ### Test
+    #vcf_name = 'phased_merge_output' # VCFs_corrida1 / VCFs_corrida2
+    vcf_name = 'variant_calls' # VCFs_corrida3
+    vcf_path = f'{BASE_DIR}/VCFs_corrida3/Barcode_4_Gen'
+    m_vcf = open_vcf(vcf_name, vcf_path=vcf_path)
+    print(m_vcf)
+    ###
     return 0
 
 
