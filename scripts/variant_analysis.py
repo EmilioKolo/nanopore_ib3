@@ -10,7 +10,6 @@ REF_DIR = get_value('ref_path')
 THREADS = 12
 TEST_MODE = False
 
-BASE_DIR = '/mnt/d/Descargas/cosas_minion'
 
 def _main():
     if TEST_MODE:
@@ -27,7 +26,7 @@ def _main():
     ### Test
     #vcf_name = 'phased_merge_output' # VCFs_corrida1 / VCFs_corrida2
     vcf_name = 'variant_calls' # VCFs_corrida3
-    vcf_path = f'{BASE_DIR}/VCFs_corrida3/Barcode_4_Gen'
+    vcf_path = f'{OUTPUT_DIR}/VCFs_corrida3/Barcode_4_Gen'
     m_vcf = open_vcf(vcf_name, vcf_path=vcf_path)
     print(m_vcf)
     ###
