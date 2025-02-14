@@ -8,7 +8,7 @@ OUTPUT_DIR = get_value('output_dir')
 REF_DIR = get_value('ref_path')
 CLAIR3_MODEL_PATH = get_value('clair3_model_path')
 CLAIR3_MODEL_NAME = 'r941_prom_hac_g303'
-THREADS = 12
+THREADS = get_value('thread_n')
 
 
 def _main():

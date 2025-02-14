@@ -7,7 +7,7 @@ from scripts.file_manager import mkdir_p, get_value
 INPUT_DIR = get_value('input_dir')
 OUTPUT_DIR = get_value('output_dir')
 REF_DIR = get_value('ref_path')
-THREADS = 12
+THREADS = get_value('thread_n')
 TEST_MODE = False
 
 
