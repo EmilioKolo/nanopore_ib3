@@ -3,11 +3,11 @@ import os
 from scripts.file_manager import mkdir_p, mv_file, get_value
 
 # Important directories
-INPUT_DIR = '/home/promethion/minknow_outputs'
-OUTPUT_DIR = '/home/promethion/Documents/nanopore_pipeline'
-REF_DIR = '/home/promethion/Documents/ref_seq'
-MODEL_PATH = '/home/promethion/documents/clair3_models'
-MODEL_NAME = 'r941_prom_hac_g303'
+INPUT_DIR = get_value('input_dir')
+OUTPUT_DIR = get_value('output_dir')
+REF_DIR = get_value('ref_path')
+CLAIR3_MODEL_PATH = get_value('clair3_model_path')
+CLAIR3_MODEL_NAME = 'r941_prom_hac_g303'
 THREADS = 12
 
 

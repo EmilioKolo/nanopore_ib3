@@ -4,9 +4,9 @@ import copy
 from scripts.file_manager import mkdir_p, get_value
 
 # Important directories
-INPUT_DIR = '/home/promethion/minknow_outputs'
-OUTPUT_DIR = '/home/promethion/Documents/nanopore_pipeline'
-REF_DIR = '/home/promethion/Documents/ref_seq'
+INPUT_DIR = get_value('input_dir')
+OUTPUT_DIR = get_value('output_dir')
+REF_DIR = get_value('ref_path')
 THREADS = 12
 TEST_MODE = False
 
