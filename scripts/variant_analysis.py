@@ -81,7 +81,6 @@ def open_vcf(vcf_name, vcf_path='.', ext='.vcf', sep='\t'):
                 m_out.append(copy.deepcopy(dict_line))
     return m_out
 
-
 def process_info(info_str):
     """
     Processes the INFO column of a VCF file.
@@ -122,7 +121,6 @@ def process_sample(sample_str, format_str):
         # Load to m_out
         m_out[l_format[i]] = l_sample[i]
     return m_out
-
 
 def _generate_data_dict(separated=True):
     # Define dict of data
