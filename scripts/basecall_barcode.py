@@ -1,6 +1,6 @@
 
 import os
-from scripts.file_manager import mkdir_p, get_value, open_txt
+from scripts.file_manager import mkdir_p, get_value, open_txt, file_exists
 
 # Important directories
 INPUT_DIR = get_value('input_dir')

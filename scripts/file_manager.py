@@ -30,6 +30,9 @@ def eliminate_spaces(dirname, dir_path, is_folder=True):
         mv_file(temp_dirpath, new_filepath)
     return 0
 
+def file_exists(filepath):
+    return os.path.isfile(filepath)
+
 def get_value(
         valname,
         sourcefile='variables',
