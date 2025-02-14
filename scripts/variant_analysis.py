@@ -1,7 +1,7 @@
 
 import os
 import copy
-from scripts.file_manager import mkdir_p
+from scripts.file_manager import mkdir_p, get_value
 
 # Important directories
 INPUT_DIR = '/home/promethion/minknow_outputs'
