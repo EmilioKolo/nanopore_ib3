@@ -4,6 +4,8 @@ input_dir = ~/documents/minknow
 output_dir = ~/documents/ont_pipeline
 # Path folder containing the reference genome
 ref_path = ~/downloads/ref_seq
+# Path folder to Trimmomatic adapter files
+adap_dir = ~/downloads/trimmomatic/adapters
 # Path folder containing the clair3 model to be used
 clair3_model_path = ~/downloads/clair3_models
 # Number of threads to be used by your pc
