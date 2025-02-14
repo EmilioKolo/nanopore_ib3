@@ -85,8 +85,8 @@ def pipeline_main(
         path_minimap2,
         path_clair3,
         refname,
-        model_name=MODEL_NAME,
-        model_path=MODEL_PATH,
+        model_name=CLAIR3_MODEL_NAME,
+        model_path=CLAIR3_MODEL_PATH,
         ref_ext='.fasta'
         )
     # Run Whatshap on the variant caller output
