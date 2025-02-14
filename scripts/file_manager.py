@@ -3,6 +3,9 @@ import os
 
 
 def eliminate_spaces(dirname, dir_path, is_folder=True):
+    """
+    Eliminates spaces from a file or directory name.
+    """
     # Replace spaces with underscores
     newdirname = dirname.replace(' ', '_')
     # Define temp_dirpath
