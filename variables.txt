@@ -3,5 +3,5 @@ input_dir = ~/documents/ont_pipeline
 # Output directory
 output_dir = ~/documents/ont_pipeline
 # Path folder containing the reference genome
-ref_path = ~/documents/ref
+ref_path = ~/downloads/ref
 
