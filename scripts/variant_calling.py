@@ -43,7 +43,7 @@ def _main():
     run_folder = 'run3'
     refname = 'hg38'
     # Run the entire pipeline
-    pipeline_main(
+    pipeline_variant_call(
         l_bc,
         run_folder,
         refname,
@@ -52,7 +52,7 @@ def _main():
     return 0
 
 
-def pipeline_main(
+def pipeline_variant_call(
         l_bc,
         run_folder,
         refname,
