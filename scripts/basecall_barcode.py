@@ -30,15 +30,33 @@ def _main():
     # Open the file with open_txt
     l_files = open_txt(INPUT_FILE, INPUT_DIR, header=False, skip='#')
     # Run the pipeline
-    pipeline_basecall_barcode(l_files, INPUT_DIR, out_path=INPUT_DIR)
+    pipeline_basecall_barcode(l_files, INPUT_DIR, out_path=OUTPUT_DIR)
     return 0
 
 
 def pipeline_basecall_barcode(l_files, input_path, out_path='.'):
     # Go through files in l_files
     for i in range(len(l_files)):
-        curr_file = l_files[i]
-        basecall_barcode_one(curr_file, input_path, out_path=out_path)
+        curr_file:str = l_files[i]
+        l_curr_file = curr_file.rsplit('/', maxsplit=1)
+        curr_filename = l_curr_file[-1]
+        if len(l_curr_file)==1:
+            curr_filepath = input_path
+        elif len(l_curr_file)==2:
+            curr_filepath = f'{input_path}/{l_curr_file[0]}'
+        else:
+            print(
+                'ERROR when splitting file:',
+                curr_file,
+                '\n',
+                l_curr_file
+                )
+            return 1
+        basecall_barcode_one(
+            curr_filename,
+            curr_filepath,
+            out_path=out_path
+            )
     return 0
 
 
@@ -46,7 +64,7 @@ def basecall_barcode_one(filename, input_path, out_path='.'):
     # Define guppy inputs and outputs
     path_guppy = f'{input_path}/guppy'
     mkdir_p(path_guppy)
-    input_file = f'{input_file}/{filename}'
+    input_file = f'{input_path}/{filename}'
     conf_file = f'{GUPPY_PATH}/{GUPPY_CONF}'
     # Run guppy
     run_guppy(input_file, path_guppy, conf_file, THREADS)
