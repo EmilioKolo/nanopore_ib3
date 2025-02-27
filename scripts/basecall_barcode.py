@@ -30,7 +30,7 @@ def _main():
     # Open the file with open_txt
     l_files = open_txt(INPUT_FILE, INPUT_DIR, header=False, skip='#')
     # Run the pipeline
-    pipeline_basecall_barcode(l_files, INPUT_DIR, out_path=OUTPUT_DIR)
+    pipeline_basecall_barcode(l_files, INPUT_DIR, out_path=INPUT_DIR)
     return 0
 
 
@@ -54,7 +54,9 @@ def basecall_barcode_one(filename, input_path, out_path='.'):
     fastq_in = f'{path_guppy}/barcode'
     in_1 = f'{fastq_in}/{filename}_1.fastq.gz'
     in_2 = f'{fastq_in}/{filename}_2.fastq.gz'
-    path_trimm = f'{input_path}/trimmomatic/{filename}'
+    path_trimm = f'{out_path}/trimmomatic/{filename}'
+    mkdir_p(out_path)
+    mkdir_p(f'{out_path}/trimmomatic')
     adap = define_adapter()
     if adap=='':
         print('# WARNING: Not checking to trim adapters.')
