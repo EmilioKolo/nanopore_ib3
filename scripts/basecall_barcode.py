@@ -62,10 +62,10 @@ def pipeline_basecall_barcode(l_files, input_path, out_path='.'):
 
 def basecall_barcode_one(filename, input_path, out_path='.'):
     # Define guppy inputs and outputs
-    path_guppy = f'{input_path}/guppy'
+    path_guppy = f'{out_path}/guppy'
     mkdir_p(path_guppy)
     input_file = f'{input_path}/{filename}'
-    conf_file = f'{GUPPY_PATH}/{GUPPY_CONF}'
+    conf_file = f'{GUPPY_CONF}'
     # Run guppy
     run_guppy(input_file, path_guppy, conf_file, THREADS)
     # Define trimmomatic inputs and outputs
