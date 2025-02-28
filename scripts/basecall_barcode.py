@@ -14,7 +14,7 @@ ADAPTERS = [ # Default picks first
     ]
 # File with list of file/folder names, one per line
 # Located in INPUT_DIR
-INPUT_FILE = 'input_names'
+INPUT_FILE = get_value('input_file')
 # Guppy values
 GUPPY_PATH = '/opt/ont/guppy/data/'
 GUPPY_CONF = get_value('guppy_conf') # Basecalling conf file
