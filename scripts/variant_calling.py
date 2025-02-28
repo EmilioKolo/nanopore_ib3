@@ -1,6 +1,6 @@
 
 import os
-from scripts.file_manager import mkdir_p, mv_file, get_value
+from scripts.file_manager import mkdir_p, mv_file, get_value, open_txt
 
 # Important directories
 INPUT_DIR = get_value('input_dir')
@@ -9,9 +9,12 @@ REF_DIR = get_value('ref_path')
 CLAIR3_MODEL_PATH = get_value('clair3_model_path')
 CLAIR3_MODEL_NAME = 'r941_prom_hac_g303'
 THREADS = get_value('thread_n')
+INPUT_FILE = get_value('input_file')
 
 
 def _main():
+    # Open the file with open_txt
+    l_files = open_txt(INPUT_FILE, INPUT_DIR, header=False, skip='#')
     # Define the list of barcodes
     l_bc = [
         'barcode01',
@@ -39,6 +42,7 @@ def _main():
         'barcode23',
         'barcode24'
         ]
+    l_bc = [i.split('/')[-1] for i in l_files]
     # Define folders
     run_folder = 'run3'
     refname = 'hg38'
@@ -68,13 +72,14 @@ def pipeline_variant_call(
     # Join fastq files
     join_fastq_l_bc(l_bc, path_fastq, path_in)
     # Run minimap2 on the list of barcodes
-    minimap2_alignment(l_bc,
-                       path_fastq,
-                       ref_dir,
-                       path_minimap2,
-                       refname,
-                       ref_ext=ref_ext
-                       )
+    minimap2_alignment(
+        l_bc,
+        path_fastq,
+        ref_dir,
+        path_minimap2,
+        refname,
+        ref_ext=ref_ext
+        )
     # Move reference to path_minimap2
     ref_file = f'{ref_dir}/{refname}{ref_ext}'
     mv_ref_file = f'{path_minimap2}/{refname}{ref_ext}'
