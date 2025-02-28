@@ -13,8 +13,6 @@ INPUT_FILE = get_value('input_file')
 
 
 def _main():
-    # Open the file with open_txt
-    l_files = open_txt(INPUT_FILE, INPUT_DIR, header=False, skip='#')
     # Define the list of barcodes
     l_bc = [
         'barcode01',
@@ -42,9 +40,8 @@ def _main():
         'barcode23',
         'barcode24'
         ]
-    l_bc = [i.split('/')[-1] for i in l_files]
     # Define folders
-    run_folder = 'run3'
+    run_folder = 'trimmomatic'
     refname = 'hg38'
     # Run the entire pipeline
     pipeline_variant_call(
@@ -118,7 +115,7 @@ def join_fastq_l_bc(l_bc, path_out, path_in):
         dir_bc = f'{path_in}/{curr_bc}'
         path_conc_out = f'{path_out}/{curr_bc}_concat.fastq'
         # Run join_fastq
-        join_fastq(dir_bc, path_conc_out)
+        join_fastq(path_in, path_conc_out)
     return 0
 
 def join_fastq(bc_path, path_concat):
