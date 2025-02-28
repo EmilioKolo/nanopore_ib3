@@ -20,10 +20,10 @@ GUPPY_PATH = '/opt/ont/guppy/data/'
 GUPPY_CONF = get_value('guppy_conf') # Basecalling conf file
 BC_KIT = get_value('barcode_kit') # Barcode kit
 # Trimmomatic values
-BORDER_SC = 20
-SLIDING_W = '4:20' # window size 4, quality limit 20
+BORDER_SC = 10
+SLIDING_W = '4:8' # (window size) : (quality limit)
 MIN_LEN = 50
-AVG_QUAL = 30
+AVG_QUAL = 10
 
 
 def _main():
@@ -70,8 +70,8 @@ def basecall_barcode_one(filename, input_path, out_path='.'):
     run_guppy(input_file, path_guppy, conf_file, THREADS)
     # Define trimmomatic inputs and outputs
     fastq_in = f'{path_guppy}/barcode'
-    in_trim = f'{fastq_in}/{filename}_0.fastq'
-    path_trimm = f'{out_path}/trimmomatic/{filename}'
+    in_trim = f'{fastq_in}/{filename.split('.')[0]}/*.fastq'
+    path_trimm = f'{out_path}/trimmomatic/{filename.split('.')[0]}'
     mkdir_p(out_path)
     mkdir_p(f'{out_path}/trimmomatic')
     adap = define_adapter()
@@ -191,8 +191,22 @@ def run_trimmomatic(input_file, out_base, adapters=''):
     sliding_w = SLIDING_W
     minlen = MIN_LEN
     avgqual = AVG_QUAL
+    # Initialize script
+    l = f'TrimmomaticSE -phred33'
     # Define input
-    l = f'TrimmomaticSE -phred33 {input_file}'
+    input_folder = os.path.dirname(input_file)
+    l_filename = os.listdir(input_folder)
+    if len(l_filename)==1:
+        filename = l_filename[0]
+    else:
+        for j in l_filename:
+            if j.endswith('.fastq') or j.endswith('.fastq.gz'):
+                filename = j
+                break
+        print('### ERROR: No fastq file found in folder.')
+        print('### Files found:', l_filename)
+        return 1
+    l += f' {input_folder}/{filename}'
     # Define outputs
     l += f' {out_base}_trimmed.fastq.gz'
     # Define adapters
