@@ -118,10 +118,15 @@ def run_barcode(input_file, output_demulti, threads):
 def run_basecall(path_pod5, path_basecall, conf_file, callers, runners):
     # Initialise guppy basecaller function
     l = 'guppy_basecaller'
+    if path_pod5.endswith('.pod5'):
+        # Redefine path to be a folder
+        used_path = os.path.dirname(path_pod5)
+    else:
+        used_path = path_pod5
     # Define input as recursive
     l += ' -r'
     # Define input
-    l += f' -i {path_pod5}'
+    l += f' -i {used_path}'
     # Define output
     mkdir_p(path_basecall)
     l += f' -s {path_basecall}'
