@@ -70,15 +70,14 @@ def basecall_barcode_one(filename, input_path, out_path='.'):
     run_guppy(input_file, path_guppy, conf_file, THREADS)
     # Define trimmomatic inputs and outputs
     fastq_in = f'{path_guppy}/barcode'
-    in_1 = f'{fastq_in}/{filename}_1.fastq.gz'
-    in_2 = f'{fastq_in}/{filename}_2.fastq.gz'
+    in_trim = f'{fastq_in}/{filename}_0.fastq'
     path_trimm = f'{out_path}/trimmomatic/{filename}'
     mkdir_p(out_path)
     mkdir_p(f'{out_path}/trimmomatic')
     adap = define_adapter()
     if adap=='':
         print('# WARNING: Not checking to trim adapters.')
-    run_trimmomatic(in_1, in_2, path_trimm, adapters=adap)
+    run_trimmomatic(in_trim, path_trimm, adapters=adap)
     return 0
 
 def define_adapter():
@@ -97,12 +96,17 @@ def define_adapter():
     return adap
 
 def run_barcode(input_file, output_demulti, threads):
+    if input_file.endswith('.fastq') or input_file.endswith('.fastq.gz'):
+        # Redefine path to be a folder
+        used_path = os.path.dirname(input_file)
+    else:
+        used_path = input_file
     # Initialise guppy barcoder function
     l = 'guppy_barcoder'
     # Define threads
     l += f' -t {threads}'
     # Define input
-    l += f' -i {input_file}'
+    l += f' -i {used_path}'
     # Define output
     mkdir_p(output_demulti)
     l += f' -s {output_demulti}'
@@ -175,25 +179,22 @@ def run_guppy(path_in, path_out, conf_file, threads):
     # Run basecalling
     run_basecall(path_pod5, path_basecall, conf_file, callers, runners)
     # Define barcoding variables
-    basecalled_files = f'{path_basecall}/*.fastq*'
+    basecalled_files = f'{path_basecall}/pass/*.fastq'
     path_demult = f'{path_out}/barcode'
     # Run barcoding
     run_barcode(basecalled_files, path_demult, threads)
     return 0
 
-def run_trimmomatic(in1, in2, out_base, adapters=''):
+def run_trimmomatic(input_file, out_base, adapters=''):
     # Define variables from global constants
     border_score = BORDER_SC
     sliding_w = SLIDING_W
     minlen = MIN_LEN
     avgqual = AVG_QUAL
     # Define input
-    l = f'TrimmomaticPE -phred33 {in1} {in2}'
+    l = f'TrimmomaticSE -phred33 {input_file}'
     # Define outputs
-    l += f' {out_base}_forward_paired.fastq.gz'
-    l += f' {out_base}_forward_unpaired.fastq.gz'
-    l += f' {out_base}_reverse_paired.fastq.gz'
-    l += f' {out_base}_reverse_unpaired.fastq.gz'
+    l += f' {out_base}_trimmed.fastq.gz'
     # Define adapters
     if adapters!='':
         l += f' ILLUMINACLIP:{adapters}:2:30:10'
